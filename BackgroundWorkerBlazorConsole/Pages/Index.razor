@@ -1,0 +1,40 @@
+﻿@page "/"
+@inject State state
+@implements IDisposable
+
+<h1>Hello, world!</h1>
+
+<div class="cards-container">
+    @foreach (var operation in Operations)
+    {
+        <div class="card">
+            <h1 class="card-title">@operation</h1>
+            @foreach (var message in Events.Where(x => x.Operation == operation).Reverse())
+            {
+                <div class="card-row">@message.Message</div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    public List<LogEvent> Events { get; set; } = new();
+    public HashSet<string> Operations { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        state.OnChange += Refresh;
+    }
+
+    private async Task Refresh(LogEvent logEvent)
+    {
+        Events.Add(logEvent);
+        Operations.Add(logEvent.Operation);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        state.OnChange -= Refresh;
+    }
+}
