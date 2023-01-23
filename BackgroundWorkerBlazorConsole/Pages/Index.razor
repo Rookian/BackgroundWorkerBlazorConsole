@@ -8,11 +8,13 @@
     @foreach (var operation in Operations)
     {
         <div class="card">
-            <h1 class="card-title">@operation</h1>
-            @foreach (var message in Events.Where(x => x.Operation == operation).Reverse())
-            {
-                <div class="card-row">@message.Message</div>
-            }
+            <div class="card-title">@operation</div>
+            <div class="card-body">
+                @foreach (var message in Events.Where(x => x.Operation == operation).Reverse())
+                {
+                    <div class="card-row">@message.Message</div>
+                }
+            </div>
         </div>
     }
 </div>
